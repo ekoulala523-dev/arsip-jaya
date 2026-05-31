@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Daily Archive</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,600;0,700;1,400&family=Plus+Jakarta+Sans:wght@400;500;600&display=swap');
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body { background-color: #f2ebd9; color: #262522; font-family: 'Plus Jakarta Sans', sans-serif; display: flex; justify-content: center; align-items: center; min-height: 100vh; padding: 30px 15px; }
+        .newspaper-sheet { max-width: 480px; width: 100%; background: #fbf7ed; padding: 35px 25px; border: 1px solid #dcd1b4; box-shadow: 0 15px 35px rgba(43, 40, 33, 0.1); position: relative; border-radius: 4px; }
+        .newspaper-sheet::before { content: ""; position: absolute; top: 12px; left: 12px; right: 12px; bottom: 12px; border: 1px solid #4a4435; pointer-events: none; opacity: 0.25; }
+        .music-control { position: absolute; top: 22px; right: 25px; z-index: 10; cursor: pointer; background: none; border: none; font-family: 'Playfair Display', serif; font-size: 10px; font-weight: 600; letter-spacing: 1px; text-transform: uppercase; color: #262522; display: flex; align-items: center; gap: 6px; padding: 5px 10px; border: 1px solid #dcd1b4; border-radius: 20px; background-color: #fbf7ed; transition: all 0.3s ease; }
+        .music-control.playing .music-icon { animation: rotateVinyl 2s linear infinite; background: #ff4d6d; }
+        @keyframes rotateVinyl { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+        header { text-align: center; border-bottom: 4px double #262522; padding-bottom: 12px; margin-bottom: 20px; }
+        h1 { font-family: 'Playfair Display', serif; font-size: 34px; font-weight: 700; text-transform: uppercase; letter-spacing: -0.5px; color: #1a1917; line-height: 1.1; }
+        .meta-bar { display: flex; justify-content: space-between; border-top: 1px solid #262522; margin-top: 10px; padding-top: 5px; font-size: 10px; text-transform: uppercase; letter-spacing: 1px; color: #4a4435; }
+        .editorial-content { font-family: 'Playfair Display', serif; font-size: 15.5px; line-height: 1.75; text-align: justify; color: #2e2c28; min-height: 160px; margin-bottom: 15px; transition: opacity 0.3s ease-in-out; }
+        .photo-frame { background: #fbf7ed; border: 1px solid #e3dac1; padding: 8px; text-align: center; display: none; animation: newspaperFade 0.6s ease-in-out; }
+        .photo-frame img { width: 100%; height: 360px; object-fit: cover; display: block; filter: grayscale(100%) sepia(20%) contrast(105%); cursor: pointer; border-radius: 2px; }
+        .gallery-nav { display: flex; justify-content: space-between; align-items: center; margin-top: 12px; border-top: 1px solid #e3dac1; padding-top: 10px; font-family: 'Playfair Display', serif; font-size: 11.5px; color: #4a4435; }
+        .nav-btn { background: none; border: none; cursor: pointer; padding: 4px 12px; font-family: 'Playfair Display', serif; font-size: 10.5px; text-transform: uppercase; }
+        footer { text-align: center; margin-top: 30px; padding-top: 12px; border-top: 1px solid #262522; font-size: 10px; text-transform: uppercase; color: #6e6551; }
+    </style>
+</head>
+<body>
+    <audio id="myAudio" src="song.mp3" loop></audio>
+    <div class="newspaper-sheet">
+        <button class="music-control" id="musicBtn" onclick="toggleMusic()">
+            <span class="music-icon"></span>
+            <span id="musicText">Play Audio</span>
+        </button>
+        <header>
+            <div class="headline-top">Special Late Edition</div>
+            <h1>The Daily Archive</h1>
+            <div class="meta-bar">
+                <span>Since 13.04.26</span>
+                <span>Bandar Lampung</span>
+                <span>Arsip Rasa</span>
+            </div>
+        </header>
+        <div class="editorial-content" id="textContainer"></div>
+        <div class="press-gallery">
+            <div class="photo-frame"><img src="img/1.jpg" onclick="nextSlide()"></div>
+            <div class="photo-frame"><img src="img/2.jpg" onclick="nextSlide()"></div>
+            <div class="photo-frame"><img src="img/3.jpg" onclick="nextSlide()"></div>
+            <div class="photo-frame"><img src="img/4.jpg" onclick="nextSlide()"></div>
+            <div class="photo-frame"><img src="img/5.jpg" onclick="nextSlide()"></div>
+            <div class="photo-frame"><img src="img/6.jpg" onclick="nextSlide()"></div>
+            <div class="photo-frame"><img src="img/7.jpg" onclick="nextSlide()"></div>
+            <div class="photo-frame"><img src="img/8.jpg" onclick="nextSlide()"></div>
+            <div class="photo-frame"><img src="img/9.jpg" onclick="nextSlide()"></div>
+            <div class="photo-frame"><img src="img/10.jpg" onclick="nextSlide()"></div>
+            <div class="photo-frame"><img src="img/11.jpg" onclick="nextSlide()"></div>
+            <div class="photo-frame"><img src="img/12.jpg" onclick="nextSlide()"></div>
+            <div class="photo-frame"><img src="img/13.jpg" onclick="nextSlide()"></div>
+            <div class="photo-frame"><img src="img/14.jpg" onclick="nextSlide()"></div>
+            <div class="gallery-nav">
+                <button class="nav-btn" onclick="prevSlide()">← Prev</button>
+                <div id="pageIndicator">arsip 1 dari 14</div>
+                <button class="nav-btn" onclick="nextSlide()">Next →</button>
+            </div>
+        </div>
+        <footer>Edisi Khusus Untuk Jaya</footer>
+    </div>
+    <script>
+        const romanticTexts = [
+            "Hubungan kita mungkin nggak selalu berjalan di atas jalan yang mulus. Dulu ada masa di mana aku sempat merasa ragu, saat luka lama masih menjadi tamu yang enggan pergi. Tapi setiap kali aku menatapmu, aku sadar bahwa perjuanganku untuk bertahan adalah keputusan terbaik yang pernah aku ambil.",
+            "Banyak malam yang aku lalui dengan pikiran yang penuh tanda tanya. Namun, di balik keraguan itu, selalu ada sisi tulus dari dirimu yang membujuk hatiku untuk tetap tinggal. Terima kasih telah menjadi alasan di balik keteguhan hatiku.",
+            "Aku menyaksikan bagaimana kamu perlahan berbenah, melepaskan beban masa lalu demi kita. Itu adalah pemandangan paling indah yang pernah aku lihat—sebuah bukti cinta yang nyata, yang membuat hatiku luluh sepenuhnya.",
+            "Memaafkanmu bukan berarti aku melupakan rasa sakitnya, tapi aku memilih untuk tidak membiarkan luka itu menulis ulang masa depan kita. Aku memilih untuk mencintai 'kamu yang sekarang', kamu yang sedang bertumbuh bersamaku.",
+            "Kita pernah berada di titik terendah, tempat di mana kepercayaan diuji dengan begitu hebatnya. Namun, melihat kita yang sekarang—yang bisa tertawa lepas dan saling bercerita tanpa beban—adalah pencapaian paling berharga dalam hidupku.",
+            "Kadang aku masih teringat masa-masa sulit kita. Namun, kenangan itu tidak lagi terasa menyakitkan, melainkan menjadi pengingat bahwa badai sekuat apa pun tak mampu meruntuhkan apa yang sudah kita bangun dengan susah payah.",
+            "Terima kasih sudah begitu sabar. Kamu menemaniku saat aku sedang hancur-hancurnya, mendengarkan setiap keluh kesahku, dan memastikan aku tidak merasa sendirian dalam ketidakpastian.",
+            "Aku tidak ingin lagi menoleh ke belakang mencari siapa yang salah. Sekarang, aku hanya ingin fokus menjadikanmu rumah/tempat yang paling aman bagi jiwaku untuk pulang, dan tempat di mana kita saling menjaga.",
+            "Kepercayaan adalah hal yang rapuh, tapi kamu berhasil memperbaikinya dengan ketulusan yang konsisten. Perlahan, kamu berhasil merebut kembali setiap sudut hatiku yang sempat tertutup.",
+            "Saat aku menatap matamu hari ini, tidak ada lagi bayang-bayang masa lalu yang tersisa. Yang aku lihat hanyalah kamu, seseorang yang selalu berusaha melindungiku dengan cara yang paling sederhana namun bermakna.",
+            "Pertengkaran kita dulu hanyalah ujian untuk membuktikan seberapa kuat ikatan kita. Dan terbukti, kita jauh lebih kuat daripada prasangka yang pernah ada.",
+            "13 April 2026 menjadi titik balik terindah kita. Walaupun disitu aku tau diterima hanya karena opsi tetapi itu adalah Hari di mana kita memutuskan untuk memulai segalanya dengan keberanian. Meskipun penuh luka, aku tidak pernah menyesali satu detik pun proses yang kita lalui bersama.",
+            "Harapanku sederhana: semoga kita tetap bisa tumbuh bersama. Meskipun nanti ada badai baru yang datang, aku percaya kita sudah cukup tangguh untuk menghadapinya dengan tangan yang saling menggenggam erat.",
+            "Every little thing with you matters, Jaya. Terima kasih karena sudah memilih untuk terus berjuang bersamaku sejak 13 April hingga detik ini. Mari terus bahagia, karena masa depan kita jauh lebih berharga daripada luka yang telah kita sembuhkan."
+        ];
+        let slideIndex = 1; let slideTimer;
+        function showSlides(n) {
+            let slides = document.getElementsByClassName("photo-frame");
+            if (n > slides.length) slideIndex = 1; if (n < 1) slideIndex = slides.length;
+            for (let i = 0; i < slides.length; i++) slides[i].style.display = "none";
+            slides[slideIndex-1].style.display = "block";
+            document.getElementById("pageIndicator").innerHTML = "arsip " + slideIndex + " dari 14";
+            let tc = document.getElementById("textContainer");
+            tc.style.opacity = 0;
+            setTimeout(() => {
+                tc.innerHTML = `<p><span style="font-size: 40px; float: left; padding-right: 8px; font-weight: bold; line-height: 0.8; color: #1a1917;">${romanticTexts[slideIndex-1][0]}</span>${romanticTexts[slideIndex-1].slice(1)}</p>`;
+                tc.style.opacity = 1;
+            }, 200);
+        }
+        function nextSlide() { showSlides(slideIndex += 1); resetTimer(); }
+        function prevSlide() { showSlides(slideIndex -= 1); resetTimer(); }
+        function toggleMusic() {
+            let audio = document.getElementById("myAudio");
+            if (audio.paused) { audio.play(); document.getElementById("musicBtn").classList.add("playing"); document.getElementById("musicText").innerText = "Mute"; }
+            else { audio.pause(); document.getElementById("musicBtn").classList.remove("playing"); document.getElementById("musicText").innerText = "Play"; }
+        }
+        function resetTimer() { clearInterval(slideTimer); slideTimer = setInterval(() => { nextSlide(); }, 8000); }
+        document.body.addEventListener('click', () => { document.getElementById("myAudio").play(); }, { once: true });
+        showSlides(slideIndex); resetTimer();
+    </script>
+</body>
+</html>
